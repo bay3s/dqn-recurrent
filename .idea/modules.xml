@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/dqn.iml" filepath="$PROJECT_DIR$/dqn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../grid/.idea/grid.iml" filepath="$PROJECT_DIR$/../grid/.idea/grid.iml" />
     </modules>
   </component>
 </project>

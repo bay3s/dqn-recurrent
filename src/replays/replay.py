@@ -22,7 +22,7 @@ class Replay(ABC):
 
     :param step: the episode step to add to the replay memory.
 
-    :return: None | EpisodeStep
+    :return: None | Transition
     """
     self._transitions.append(step)
 
@@ -44,7 +44,7 @@ class Replay(ABC):
     """
     Return the list of episode steps in the current memory.
 
-    :return: List[EpisodeStep]
+    :return: List[Transition]
     """
     return self._transitions
 
