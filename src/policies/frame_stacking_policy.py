@@ -28,7 +28,7 @@ class FrameStackingPolicy(nn.Module):
     self.relu = nn.ReLU()
     pass
 
-  def forward(self, x: torch.Tensor, batch_size: int = 1):
+  def forward(self, x: torch.Tensor, batch_size: int):
     """
     Takes as input the current state of the agent and outputs the state-action values for the next state.
 

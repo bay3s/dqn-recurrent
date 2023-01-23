@@ -59,27 +59,29 @@ class DQNFrames:
     self.training_steps = 0
     pass
 
-  def predict_q(self, state: torch.Tensor) -> torch.Tensor:
+  def predict_q(self, state: torch.Tensor, batch_size: int) -> torch.Tensor:
     """
     Return Q-value predictions given a particular state as input.
 
     :param state: State for which to predict the Q-values
+    :param batch_size: Batch size in the forward pass.
 
     :return: torch.Tensor
     """
     with torch.no_grad():
-      return self.policy(state, self.frame_stack.capacity)
+      return self.policy(state, batch_size)
 
-  def predict_q_target(self, state: torch.Tensor) -> torch.Tensor:
+  def predict_q_target(self, state: torch.Tensor, batch_size: int) -> torch.Tensor:
     """
     Return Q-value predictions made by the target given a particular state as input.
 
     :param state: State for which to predict the Q-values
+    :param batch_size: Batch size in the forward pass.
 
     :return: torch.Tensor
     """
     with torch.no_grad():
-      return self.target_policy(state, self.frame_stack.capacity)
+      return self.target_policy(state, batch_size)
 
   def select_action(self, state: torch.Tensor) -> int:
     """
@@ -92,7 +94,7 @@ class DQNFrames:
     if random.random() < self.epsilon:
       return np.random.choice(self.env.action_space)
 
-    return torch.argmax(self.predict_q(state), self.frame_stack.capacity).item()
+    return torch.argmax(self.predict_q(state, batch_size = 1)).item()
 
   def compute_loss(self):
     """
@@ -122,14 +124,14 @@ class DQNFrames:
     is_final_tensor = torch.Tensor(is_final)
     is_final_indices = torch.where(is_final_tensor == True)[0]
 
-    q_values_next = self.predict_q_target(next_states)
-    q_values_expected = self.predict_q(states)
+    q_values_next = self.predict_q_target(next_states, self.replay_size)
+    q_values_expected = self.predict_q(states, self.replay_size)
     q_values_expected[range(len(q_values_expected)), actions] = rewards + self.discount_rate * torch.max(q_values_next,
                                                                                                          axis = 1).values
     q_values_expected[is_final_indices.tolist(), actions_tensor[is_final_indices].tolist()] = rewards[
       is_final_indices.tolist()]
 
-    return self.criterion(self.policy(states), q_values_expected)
+    return self.criterion(self.policy(states, self.replay_size), q_values_expected)
 
   def tune(self):
     """

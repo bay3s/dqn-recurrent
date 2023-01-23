@@ -61,6 +61,8 @@ for epi in tqdm(range(max_episodes)):
   if len(rewards_last_10) == 10:
     rewards_last_10.popleft()
 
-  # check if the policy is fully trained.
-  if median_reward > 190.:
-    break
+  print(median_reward)
+  continue
+
+plt.plot(plt_rewards_median)
+pass
