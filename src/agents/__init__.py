@@ -1,3 +1,3 @@
-from .dqn import DQN
+from .dqn_frames import DQNFrames
 
-__all__ = ['DQN']
+__all__ = ['DQNFrames']

@@ -1,3 +1,3 @@
-from .frame_stacking_policy import
+from .frame_stacking_policy import FrameStackingPolicy
 
-__all__ = ['CartPolePolicy']
+__all__ = ['FrameStackingPolicy']

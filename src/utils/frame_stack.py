@@ -1,19 +1,41 @@
 from collections import deque
+import numpy as np
 
-class FrameStacker:
-  def __init__(self, capacity: int, img_dim: tuple) -> None:
+
+class FrameStack:
+  def __init__(self, capacity: int, img_dims: tuple) -> None:
     """
     Initialize an episode.
 
     :param capacity: Maximum number of previous frames that this stack should hold.
-    :param img_dim: Tuple specifying the dimensions of images that will be added to the stack.
+    :param img_dims: Tuple containing (width, height) dimensions for observations made in each state.
     """
     self.capacity = capacity
-    self.img_dim = img_dim
     self._frames = deque([], maxlen = self.capacity)
+    self._img_dims = img_dims
+    self.reset()
     pass
 
-  def push(self, frame: np.ndarray) -> Transition:
+  def get_state(self) -> np.ndarray:
+    """
+    Returns the state based on the current frame stack.
+
+    :return: np.ndarray
+    """
+    return np.array(self._frames)
+
+  def reset(self):
+    """
+    Reset the frame stack to its original state.
+
+    :return: None
+    """
+    img_width, img_height = self._img_dims
+    tmp = np.zeros((img_width, img_height))
+    for i in range(0, self.capacity):
+      self.frames.append(tmp)
+
+  def push(self, frame: np.ndarray) -> np.ndarray:
     """
     Appends a given frame to the stack.
 
@@ -50,17 +72,6 @@ class FrameStacker:
     :return: int
     """
     return len(self._frames)
-
-  @abstractmethod
-  def sample(self, replay_size: int):
-    """
-    Sample transitions from the replay memory.
-
-    :param replay_size: Number of transitions to sample from memory.
-
-    :return: list
-    """
-    raise NotImplementedError('Function `sample` not implemented.')
 
   def truncate(self) -> None:
     """

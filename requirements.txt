@@ -3,4 +3,4 @@ gym
 numpy
 matplotlib
 git+https://github.com/bay3s/grid.git@main
-skimage
+tqdm
